@@ -20,7 +20,7 @@ angular.module('mm.addons.qtype_gapfill')
          * @ngdoc directive
          * @name mmaQtypeGapfill
          */
-        .directive('mmaQtypeGapfill', function ($log, $mmQuestionHelper, $mmUtil) {
+        .directive('mmaQtypeGapfill', function ($log, $mmQuestionHelper, $mmUtil, $timeout) {
             $log = $log.getInstance('mmaQtypeGapfill');
             return {
                 restrict: 'A',
@@ -53,20 +53,32 @@ angular.module('mm.addons.qtype_gapfill')
                     $mmQuestionHelper.replaceCorrectnessClasses(questionEl);
                     // Treat the correct/incorrect icons.
                     $mmQuestionHelper.treatCorrectnessIcons(scope, questionEl);
+                  
+
+                    draggables = content.querySelectorAll('.draggable');
+                    if (draggables.length > 0) {
+                        droppables = content.querySelectorAll('.droptarget');
+                        for (i = 0; i < droppables.length; i++) {
+                            droppables[i].disabled = "true";
+                            //angular.element(droppables[i]).css('color', '#880000');
+                            angular.element(droppables[i]).css('-webkit-opacity', '1');
+                        }
+                    }
 
                     // Set the question text.
                     question.text = content.innerHTML;
-
+                    
                     scope.selectAnswer = function (event) {
                         selector = "#" + event.target.id;
                         parts = selector.split(":");
-                        selector = parts[0] + "\\:" + parts[1];
-                        selection = document.querySelector(selector);
-                        if ((selection === null) || (angular.element(selection).hasClass('readonly'))) {
+                        selectedel = parts[0] + "\\:" + parts[1];
+                        selectedel = document.querySelector(selectedel);
+                        if ((selectedel === null) || (angular.element(selectedel).hasClass('readonly'))) {
                             /* selection will be null after marking/readonly */
                             return;
                         }
-                        selection = angular.element(selection);
+
+                        selection = angular.element(selectedel);
                         if (selection.hasClass('draggable')) {
                             if (selection.hasClass('picked')) {
                                 /*if picked it set this must be a second
@@ -74,33 +86,35 @@ angular.module('mm.addons.qtype_gapfill')
                                  */
                                 selection.removeClass('picked');
                                 selection.attr('title', '');
-                                document.querySelector('.qtext').style.cursor = "auto";
                                 last_item_clicked = "";
 
                             } else {
-                                /*set border to solid on all words */
-                                draggables = document.querySelectorAll('.draggable');
-                                draggables.forEach(function (draggable) {
-                                    angular.element(draggable).css('border', 'solid 1px');
-                                });
                                 selection.addClass('picked');
                                 selection.attr('title', 'picked');
                                 selection.css('border', 'solid 0px');
-                                droptargets = document.querySelectorAll('.droptarget');
-                                droptargets.forEach(function (droptarget) {
-                                    angular.element(droptarget).css('cursor', 'pointer');
-                                });
+                                /*set border to solid on all words */
+                                /*  draggables = document.querySelectorAll('.draggable');
+                                 draggables.forEach(function (draggable) {
+                                 angular.element(draggable).css('border', 'solid 1px');
+                                 });*/
+
                                 last_item_clicked = event.target.innerText;
                             }
                         }
 
+
+
                         if (selection.hasClass('droptarget')) {
                             if (last_item_clicked !== "") {
+
                                 selection[0].value = last_item_clicked;
+                                last_item_clicked = "";
+
+                                // cordova.plugins.Keyboard.close();
                             }
-                            /*set border to solid on all words */
+                            /*set border to solid on all draggable words */
                             draggables = document.querySelectorAll('.draggable');
-                            draggables.forEach(function (draggable) {
+                            angular.foreach(draggable,function(draggable){
                                 angular.element(draggable).css('border', 'solid 1px');
                             });
                         }
