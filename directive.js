@@ -53,70 +53,71 @@ angular.module('mm.addons.qtype_gapfill')
                     $mmQuestionHelper.replaceCorrectnessClasses(questionEl);
                     // Treat the correct/incorrect icons.
                     $mmQuestionHelper.treatCorrectnessIcons(scope, questionEl);
-                  
 
+
+                    /* set all droppables to disabled but remove the faded look shown on ios */
                     draggables = content.querySelectorAll('.draggable');
                     if (draggables.length > 0) {
                         droppables = content.querySelectorAll('.droptarget');
                         for (i = 0; i < droppables.length; i++) {
                             droppables[i].disabled = "true";
-                            //angular.element(droppables[i]).css('color', '#880000');
                             angular.element(droppables[i]).css('-webkit-opacity', '1');
                         }
                     }
 
                     // Set the question text.
                     question.text = content.innerHTML;
-                    
-                    scope.selectAnswer = function (event) {
+
+                    function getEl(event) {
                         selector = "#" + event.target.id;
                         parts = selector.split(":");
-                        selectedel = parts[0] + "\\:" + parts[1];
-                        selectedel = document.querySelector(selectedel);
+                        element = parts[0] + "\\:" + parts[1];
+                        element = document.querySelector(element);
+                        return element;
+                    }
+                    function deselect(selection) {
+                        /*set border to solid on all draggable words */
+                        draggables = document.querySelectorAll('.draggable');
+                        for (i = 0; i < draggables.length; i++) {
+                            if(draggables[i]===selection) continue;
+                            angular.element(draggables[i]).css('border', 'solid 1px');
+                            angular.element(draggables[i]).attr('title', '');
+                            angular.element(draggables[i]).removeClass('picked');
+                        }
+                    }
+                    scope.selectAnswer = function (event) {
+                        selectedel = getEl(event);
                         if ((selectedel === null) || (angular.element(selectedel).hasClass('readonly'))) {
                             /* selection will be null after marking/readonly */
+                            last_item_clicked = "";
                             return;
                         }
 
                         selection = angular.element(selectedel);
                         if (selection.hasClass('draggable')) {
+                            deselect(selection);
                             if (selection.hasClass('picked')) {
                                 /*if picked it set this must be a second
                                  * click so set it back to show as unpicked
                                  */
-                                selection.removeClass('picked');
-                                selection.attr('title', '');
+                                deselect();
                                 last_item_clicked = "";
-
                             } else {
+                                /* apply the classes and set the 
+                                 * value to be copied into the gap */
                                 selection.addClass('picked');
                                 selection.attr('title', 'picked');
                                 selection.css('border', 'solid 0px');
-                                /*set border to solid on all words */
-                                /*  draggables = document.querySelectorAll('.draggable');
-                                 draggables.forEach(function (draggable) {
-                                 angular.element(draggable).css('border', 'solid 1px');
-                                 });*/
-
                                 last_item_clicked = event.target.innerText;
                             }
                         }
 
-
-
                         if (selection.hasClass('droptarget')) {
-                            if (last_item_clicked !== "") {
-
-                                selection[0].value = last_item_clicked;
-                                last_item_clicked = "";
-
-                                // cordova.plugins.Keyboard.close();
-                            }
-                            /*set border to solid on all draggable words */
-                            draggables = document.querySelectorAll('.draggable');
-                            angular.foreach(draggable,function(draggable){
-                                angular.element(draggable).css('border', 'solid 1px');
-                            });
+                            /* put the selected value into the gap */
+                            selection[0].value = last_item_clicked;
+                            angular.element(selection[0]).css('text-align','center');
+                            last_item_clicked = "";
+                            deselect();
                         }
 
                     };
