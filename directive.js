@@ -79,17 +79,24 @@ angular.module('mm.addons.qtype_gapfill')
                         /*set border to solid on all draggable words */
                         draggables = document.querySelectorAll('.draggable');
                         for (i = 0; i < draggables.length; i++) {
-                            if(draggables[i]===selection) continue;
+                            if (draggables[i] === selection)
+                                continue;
                             angular.element(draggables[i]).css('border', 'solid 1px');
                             angular.element(draggables[i]).attr('title', '');
                             angular.element(draggables[i]).removeClass('picked');
                         }
                     }
                     scope.selectAnswer = function (event) {
-                        selectedel = getEl(event);
+                        gapfillreadonly = document.querySelectorAll('.readonly');
+                        if (gapfillreadonly.length >0){
+                            return;
+                        }
+                        selectedel = getEl(event); 
                         if ((selectedel === null) || (angular.element(selectedel).hasClass('readonly'))) {
                             /* selection will be null after marking/readonly */
                             last_item_clicked = "";
+                            /*a click away from any draggables should deselecg them all */
+                            deselect();
                             return;
                         }
 
@@ -113,9 +120,13 @@ angular.module('mm.addons.qtype_gapfill')
                         }
 
                         if (selection.hasClass('droptarget')) {
+                         gapfillreadonly = document.querySelectorAll('.readonly');
+                            if (gapfillreadonly.length > 0){
+                                return;
+                            }
                             /* put the selected value into the gap */
                             selection[0].value = last_item_clicked;
-                            angular.element(selection[0]).css('text-align','center');
+                            angular.element(selection[0]).css('text-align', 'center');
                             last_item_clicked = "";
                             deselect();
                         }
