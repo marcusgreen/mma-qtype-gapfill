@@ -3,14 +3,16 @@
     /* the gap where answers are dropped/keyed in */
     input[type=text]{
         border:1px solid black;
-        padding:1px;
         margin-top:1px;
         margin-bottom:1px;  
         background:white;
         color:black;
         border-radius:4px;
         display:inline;
-        text-align:center;
+    }
+
+    .droptarget{
+        text-align:center;  
     }
 
     span.draggable.answers{
