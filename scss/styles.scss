@@ -1,10 +1,11 @@
 .mma-qtype-gapfill-container {
-
+    
     /* the gap where answers are dropped/keyed in */
     input[type=text]{
         border:1px solid black;
-        padding-left:1px;
-        padding-right:1px;
+        padding:1px;
+        margin-top:1px;
+        margin-bottom:1px;  
         background:white;
         color:black;
         border-radius:4px;
