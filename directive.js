@@ -81,9 +81,10 @@ angular.module('mm.addons.qtype_gapfill')
                         for (i = 0; i < draggables.length; i++) {
                             if (draggables[i] === selection)
                                 continue;
-                            angular.element(draggables[i]).css('border', 'solid 1px');
                             angular.element(draggables[i]).attr('title', '');
                             angular.element(draggables[i]).removeClass('picked');
+                            angular.element(draggables[i]).addClass('notpicked');
+
                         }
                     }
                     scope.selectAnswer = function (event) {
@@ -95,7 +96,7 @@ angular.module('mm.addons.qtype_gapfill')
                         if ((selectedel === null) || (angular.element(selectedel).hasClass('readonly'))) {
                             /* selection will be null after marking/readonly */
                             last_item_clicked = "";
-                            /*a click away from any draggables should deselecg them all */
+                            /*a click away from any draggables should deselect them all */
                             deselect();
                             return;
                         }
@@ -113,8 +114,8 @@ angular.module('mm.addons.qtype_gapfill')
                                 /* apply the classes and set the 
                                  * value to be copied into the gap */
                                 selection.addClass('picked');
+                                selection.removeClass('notpicked');
                                 selection.attr('title', 'picked');
-                                selection.css('border', 'solid 0px');
                                 last_item_clicked = event.target.innerText;
                             }
                         }
