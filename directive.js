@@ -67,6 +67,10 @@ angular.module('mm.addons.qtype_gapfill')
 
                     // Set the question text.
                     question.text = content.innerHTML;
+                    gapfillreadonly = document.querySelectorAll('.readonly');
+                     if (gapfillreadonly.length > 0) {
+                                question.readonly=true;
+                     }
 
                     function getEl(event) {
                         selector = "#" + event.target.id;
@@ -88,11 +92,14 @@ angular.module('mm.addons.qtype_gapfill')
                         }
                     }
                     scope.selectAnswer = function (event) {
-                        gapfillreadonly = document.querySelectorAll('.readonly');
-                        if (gapfillreadonly.length >0){
+                        /*if the question is in a readonly state, e.g. after being
+                         * answered or in the review page then stop any further 
+                         * selections.
+                         */
+                        if (question.readonly==true) {
                             return;
                         }
-                        selectedel = getEl(event); 
+                        selectedel = getEl(event);
                         if ((selectedel === null) || (angular.element(selectedel).hasClass('readonly'))) {
                             /* selection will be null after marking/readonly */
                             last_item_clicked = "";
@@ -103,7 +110,16 @@ angular.module('mm.addons.qtype_gapfill')
 
                         selection = angular.element(selectedel);
                         if (selection.hasClass('draggable')) {
-                            deselect(selection);
+                            /* Only select if a different item has been clicked. 
+                             * if the same item is clicked twice in a row it will
+                             * toggle off. This is how many people expect a button
+                             * to work, i.e. toggle on toggle off
+                             * */
+                            if (typeof last_item_clicked !== "undefined") {
+                                if (selection[0].innerText != last_item_clicked) {
+                                    deselect(selection);
+                                }
+                            }
                             if (selection.hasClass('picked')) {
                                 /*if picked it set this must be a second
                                  * click so set it back to show as unpicked
@@ -121,8 +137,8 @@ angular.module('mm.addons.qtype_gapfill')
                         }
 
                         if (selection.hasClass('droptarget')) {
-                         gapfillreadonly = document.querySelectorAll('.readonly');
-                            if (gapfillreadonly.length > 0){
+                           // gapfillreadonly = document.querySelectorAll('.readonly');
+                            if (question.readonly==true) {
                                 return;
                             }
                             /* put the selected value into the gap */
@@ -133,6 +149,20 @@ angular.module('mm.addons.qtype_gapfill')
                         }
 
                     };
+                    $timeout(function () {
+                        /*set isdragdrop to true if it is a dragdrop question. This will then be used
+                         * in template.html to determine when to show the  blue "tap to select..." prompt
+                         */
+                        var draggables = document.querySelector('.qtext').querySelector('.draggable');
+                        if (draggables != null) {
+                            question.isdragdrop = true;
+                        }
+                        gapfillreadonly = document.querySelectorAll('.readonly');
+                        if (gapfillreadonly.length > 0) {
+                            question.readonly = true;
+                        }
+
+                    });
                 }
             };
         });

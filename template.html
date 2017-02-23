@@ -1,5 +1,6 @@
 <section class="list mma-qtype-gapfill-container" ng-if="question.text || question.text === ''">
     <div class="item item-text-wrap">
+          <p ng-if="!question.readonly && question.isdragdrop" class="item-howto item item-icon-left"><i class="icon ion-information"></i> {{ 'mm.question.howtodraganddrop' | translate }}</p>
           <p><mm-format-text  ng-onhold="clearGap($event)" ng-dblclick="clearGap($event)" ng-click="selectAnswer($event)" watch="true" class="mm-content-with-float qtext" component="{{component}}" component-id="{{componentId}}">{{ question.text }}</mm-format-text></p>
     </div>
 </section>
