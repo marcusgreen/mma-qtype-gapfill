@@ -40,6 +40,14 @@ angular.module('mm.addons.qtype_gapfill')
 
                     // Get question content.
                     content = questionEl[0].querySelector('.qtext');
+		   // Get answeroptions/draggables.
+                    answeroptions = questionEl[0].querySelector('.answeroptions');
+		
+                    gapfillreadonly = questionEl[0].querySelector('.readonly');
+                    
+                    if (gapfillreadonly != null) {
+                                question.readonly=true;
+                     }
                     if (!content) {
                         $log.warn('Aborting because of an error parsing question.', question.name);
                         return $mmQuestionHelper.showDirectiveError(scope);
@@ -55,22 +63,24 @@ angular.module('mm.addons.qtype_gapfill')
                     $mmQuestionHelper.treatCorrectnessIcons(scope, questionEl);
 
 
-                    /* set all droppables to disabled but remove the faded look shown on ios */
-                    draggables = content.querySelectorAll('.draggable');
-                    if (draggables.length > 0) {
-                        droppables = content.querySelectorAll('.droptarget');
-                        for (i = 0; i < droppables.length; i++) {
-                            droppables[i].disabled = "true";
-                            angular.element(droppables[i]).css('-webkit-opacity', '1');
+                    /* set all droppables to disabled but remove the faded look shown on ios
+                     * This prevents the keyboard popping up when a droppable is dropped onto
+                     * a droptarget.  
+                     */
+                    if (answeroptions !== null) {
+                        droptargets = content.querySelectorAll('.droptarget');
+                        for (i = 0; i < droptargets.length; i++) {
+                            droptargets[i].disabled = "true";
+                            angular.element(droptargets[i]).css('-webkit-opacity', '1');
                         }
                     }
 
                     // Set the question text.
                     question.text = content.innerHTML;
                     gapfillreadonly = document.querySelectorAll('.readonly');
-                     if (gapfillreadonly.length > 0) {
-                                question.readonly=true;
-                     }
+                 
+					// Set the answer options.
+                    question.answeroptions = answeroptions.innerHTML;
 
                     function getEl(event) {
                         selector = "#" + event.target.id;
@@ -122,7 +132,7 @@ angular.module('mm.addons.qtype_gapfill')
                             }
                             if (selection.hasClass('picked')) {
                                 /*if picked it set this must be a second
-                                 * click so set it back to show as unpicked
+                                 * click so set it backx`x` to show as unpicked
                                  */
                                 deselect();
                                 last_item_clicked = "";
@@ -153,9 +163,13 @@ angular.module('mm.addons.qtype_gapfill')
                         /*set isdragdrop to true if it is a dragdrop question. This will then be used
                          * in template.html to determine when to show the  blue "tap to select..." prompt
                          */
-                        var draggables = document.querySelector('.qtext').querySelector('.draggable');
+                        var draggables = document.querySelectorAll('.draggable');
                         if (draggables != null) {
                             question.isdragdrop = true;
+                        }
+			var optionsaftertext=document.querySelector('#gapfill_optionsaftertext');
+	        	 if (optionsaftertext !=null) {
+                            question.optionsaftertext = true;
                         }
                         gapfillreadonly = document.querySelectorAll('.readonly');
                         if (gapfillreadonly.length > 0) {
