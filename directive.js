@@ -29,7 +29,7 @@ angular.module('mm.addons.qtype_gapfill')
                 link: function (scope) {
                     var question = scope.question,
                             questionEl,
-                            content;
+                            questiontext;
 
                     if (!question) {
                         $log.warn('Aborting because of no question received.');
@@ -38,8 +38,8 @@ angular.module('mm.addons.qtype_gapfill')
 
                     questionEl = angular.element(question.html);
 
-                    // Get question content.
-                    content = questionEl[0].querySelector('.qtext');
+                    // Get question questiontext.
+                    questiontext = questionEl[0].querySelector('.qtext');
 		   // Get answeroptions/draggables.
                     answeroptions = questionEl[0].querySelector('.answeroptions');
 		
@@ -48,14 +48,14 @@ angular.module('mm.addons.qtype_gapfill')
                     if (gapfillreadonly != null) {
                                 question.readonly=true;
                      }
-                    if (!content) {
+                    if (!questiontext) {
                         $log.warn('Aborting because of an error parsing question.', question.name);
                         return $mmQuestionHelper.showDirectiveError(scope);
                     }
 
                     // Remove sequencecheck and validation error.
-                    $mmUtil.removeElement(content, 'input[name*=sequencecheck]');
-                    $mmUtil.removeElement(content, '.validationerror');
+                    $mmUtil.removeElement(questiontext, 'input[name*=sequencecheck]');
+                    $mmUtil.removeElement(questiontext, '.validationerror');
 
                     // Replace Moodle's correct/incorrect classes with our own.
                     $mmQuestionHelper.replaceCorrectnessClasses(questionEl);
@@ -68,7 +68,7 @@ angular.module('mm.addons.qtype_gapfill')
                      * a droptarget.  
                      */
                     if (answeroptions !== null) {
-                        droptargets = content.querySelectorAll('.droptarget');
+                        droptargets = questiontext.querySelectorAll('.droptarget');
                         for (i = 0; i < droptargets.length; i++) {
                             droptargets[i].disabled = "true";
                             angular.element(droptargets[i]).css('-webkit-opacity', '1');
@@ -76,7 +76,7 @@ angular.module('mm.addons.qtype_gapfill')
                     }
 
                     // Set the question text.
-                    question.text = content.innerHTML;
+                    question.text = questiontext.innerHTML;
                     gapfillreadonly = document.querySelectorAll('.readonly');
                  
 					// Set the answer options.
