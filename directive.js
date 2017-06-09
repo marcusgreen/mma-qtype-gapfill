@@ -37,17 +37,18 @@ angular.module('mm.addons.qtype_gapfill')
                     }
 
                     questionEl = angular.element(question.html);
+                    questionEl = questionEl[0] || questionEl;
 
                     // Get question questiontext.
-                    questiontext = questionEl[0].querySelector('.qtext');
-		   // Get answeroptions/draggables.
-                    answeroptions = questionEl[0].querySelector('.answeroptions');
-		
-                    gapfillreadonly = questionEl[0].querySelector('.readonly');
-                    
+                    questiontext = questionEl.querySelector('.qtext');
+                    // Get answeroptions/draggables.
+                    answeroptions = questionEl.querySelector('.answeroptions');
+
+                    gapfillreadonly = questionEl.querySelector('.readonly');
+
                     if (gapfillreadonly != null) {
-                                question.readonly=true;
-                     }
+                        question.readonly = true;
+                    }
                     if (!questiontext) {
                         $log.warn('Aborting because of an error parsing question.', question.name);
                         return $mmQuestionHelper.showDirectiveError(scope);
@@ -78,8 +79,8 @@ angular.module('mm.addons.qtype_gapfill')
                     // Set the question text.
                     question.text = questiontext.innerHTML;
                     gapfillreadonly = document.querySelectorAll('.readonly');
-                 
-					// Set the answer options.
+
+                    // Set the answer options.
                     question.answeroptions = answeroptions.innerHTML;
 
                     function getEl(event) {
@@ -106,7 +107,7 @@ angular.module('mm.addons.qtype_gapfill')
                          * answered or in the review page then stop any further 
                          * selections.
                          */
-                        if (question.readonly==true) {
+                        if (question.readonly == true) {
                             return;
                         }
                         selectedel = getEl(event);
@@ -147,8 +148,8 @@ angular.module('mm.addons.qtype_gapfill')
                         }
 
                         if (selection.hasClass('droptarget')) {
-                           // gapfillreadonly = document.querySelectorAll('.readonly');
-                            if (question.readonly==true) {
+                            // gapfillreadonly = document.querySelectorAll('.readonly');
+                            if (question.readonly == true) {
                                 return;
                             }
                             /* put the selected value into the gap */
@@ -167,8 +168,8 @@ angular.module('mm.addons.qtype_gapfill')
                         if (draggables != null) {
                             question.isdragdrop = true;
                         }
-			var optionsaftertext=document.querySelector('#gapfill_optionsaftertext');
-	        	 if (optionsaftertext !=null) {
+                        var optionsaftertext = document.querySelector('#gapfill_optionsaftertext');
+                        if (optionsaftertext != null) {
                             question.optionsaftertext = true;
                         }
                         gapfillreadonly = document.querySelectorAll('.readonly');
