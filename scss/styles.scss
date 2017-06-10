@@ -11,15 +11,15 @@
         display:inline;
         height:inherit;
     }
-    
-    /*.gapfill-item-howto{
-        margin-top:4px;
-    }*/
 
     .droptarget{
         text-align:center;  
     }
 
+    span.draggable.answers{
+        font-size: 120%;
+        padding:3px;
+    }
     /**
     When an answer is picked the shadows
     should make it look a bit like it has been
@@ -46,7 +46,7 @@
         padding-right:4px;
         background:white;
         z-index: 3;
-       
+
         -moz-box-shadow: 2px 2px 2px #000;
         -webkit-box-shadow: 2px 2px 2px #000;
         box-shadow: 2px 2px 2px #000;

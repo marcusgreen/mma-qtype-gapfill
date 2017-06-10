@@ -44,26 +44,10 @@ angular.module('mm.addons.qtype_gapfill')
                     // Get answeroptions/draggables.
                     answeroptions = questionEl.querySelector('.answeroptions');
 
-                    gapfillreadonly = questionEl.querySelector('.readonly');
-
-                    if (gapfillreadonly != null) {
+                    if(questionEl.querySelector('.readonly') != null){
                         question.readonly = true;
                     }
-                    if (!questiontext) {
-                        $log.warn('Aborting because of an error parsing question.', question.name);
-                        return $mmQuestionHelper.showDirectiveError(scope);
-                    }
-
-                    // Remove sequencecheck and validation error.
-                    $mmUtil.removeElement(questiontext, 'input[name*=sequencecheck]');
-                    $mmUtil.removeElement(questiontext, '.validationerror');
-
-                    // Replace Moodle's correct/incorrect classes with our own.
-                    $mmQuestionHelper.replaceCorrectnessClasses(questionEl);
-                    // Treat the correct/incorrect icons.
-                    $mmQuestionHelper.treatCorrectnessIcons(scope, questionEl);
-
-
+              
                     /* set all droppables to disabled but remove the faded look shown on ios
                      * This prevents the keyboard popping up when a droppable is dropped onto
                      * a droptarget.  
@@ -78,7 +62,6 @@ angular.module('mm.addons.qtype_gapfill')
 
                     // Set the question text.
                     question.text = questiontext.innerHTML;
-                    gapfillreadonly = document.querySelectorAll('.readonly');
 
                     // Set the answer options.
                     question.answeroptions = answeroptions.innerHTML;
@@ -90,8 +73,15 @@ angular.module('mm.addons.qtype_gapfill')
                         element = document.querySelector(element);
                         return element;
                     }
+                    
                     function deselect(selection) {
-                        /*set border to solid on all draggable words */
+                        /*set border to solid on all draggable words 
+                         * because document is used here instead of 
+                         * someting more specific, every draggable/optionanswer
+                         * will be deselected. But that is OK, because if 
+                         * there is a deselection everything should be deselected
+                         * e.g. on a multi question page
+                         */
                         draggables = document.querySelectorAll('.draggable');
                         for (i = 0; i < draggables.length; i++) {
                             if (draggables[i] === selection)
@@ -133,7 +123,7 @@ angular.module('mm.addons.qtype_gapfill')
                             }
                             if (selection.hasClass('picked')) {
                                 /*if picked it set this must be a second
-                                 * click so set it backx`x` to show as unpicked
+                                 * click so set it backx to show as unpicked
                                  */
                                 deselect();
                                 last_item_clicked = "";
@@ -148,7 +138,6 @@ angular.module('mm.addons.qtype_gapfill')
                         }
 
                         if (selection.hasClass('droptarget')) {
-                            // gapfillreadonly = document.querySelectorAll('.readonly');
                             if (question.readonly == true) {
                                 return;
                             }
@@ -164,15 +153,13 @@ angular.module('mm.addons.qtype_gapfill')
                         /*set isdragdrop to true if it is a dragdrop question. This will then be used
                          * in template.html to determine when to show the  blue "tap to select..." prompt
                          */
-                        var draggables = document.querySelectorAll('.draggable');
-                        if (draggables != null) {
+                        if(questionEl.querySelectorAll('.draggable') != null){
                             question.isdragdrop = true;
                         }
-                        var optionsaftertext = document.querySelector('#gapfill_optionsaftertext');
-                        if (optionsaftertext != null) {
-                            question.optionsaftertext = true;
+                        if(questionEl.querySelector('#gapfill_optionsaftertext') != null){
+                             question.optionsaftertext = true;
                         }
-                        gapfillreadonly = document.querySelectorAll('.readonly');
+                        gapfillreadonly = questionEl.querySelectorAll('.readonly');
                         if (gapfillreadonly.length > 0) {
                             question.readonly = true;
                         }
