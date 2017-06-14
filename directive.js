@@ -39,7 +39,7 @@ angular.module('mm.addons.qtype_gapfill')
                     questionEl = angular.element(question.html);
 
                     // Get question content.
-                    content = questionEl[0].querySelector('.qtext');
+                    content = questionEl[0].querySelector('.content');
                     if (!content) {
                         $log.warn('Aborting because of an error parsing question.', question.name);
                         return $mmQuestionHelper.showDirectiveError(scope);
@@ -53,6 +53,8 @@ angular.module('mm.addons.qtype_gapfill')
                     $mmQuestionHelper.replaceCorrectnessClasses(questionEl);
                     // Treat the correct/incorrect icons.
                     $mmQuestionHelper.treatCorrectnessIcons(scope, questionEl);
+                    $mmQuestionHelper.replaceFeedbackClasses(questionEl);
+
 
 
                     /* set all droppables to disabled but remove the faded look shown on ios */
@@ -80,7 +82,7 @@ angular.module('mm.addons.qtype_gapfill')
                         return element;
                     }
                     function deselect(selection) {
-                        /*set border to solid on all draggable words */
+                        /*set border to solid on all draggable words */ 
                         draggables = document.querySelectorAll('.draggable');
                         for (i = 0; i < draggables.length; i++) {
                             if (draggables[i] === selection)
