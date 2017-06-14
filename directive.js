@@ -38,15 +38,33 @@ angular.module('mm.addons.qtype_gapfill')
 
                     questionEl = angular.element(question.html);
                     questionEl = questionEl[0] || questionEl;
+                    
+                    
+                
+                    
+                    // Replace Moodle's correct/incorrect and feedback classes with our own.
+                    /*$mmQuestionHelper.replaceCorrectnessClasses(questionEl);
+                    $mmQuestionHelper.replaceFeedbackClasses(questionEl);*/
+
 
                     // Get question questiontext.
                     questiontext = questionEl.querySelector('.qtext');
+                        // Remove sequencecheck and validation error.
+                    $mmUtil.removeElement(questiontext, 'input[name*=sequencecheck]');
+                    $mmUtil.removeElement(questiontext, '.validationerror');
+                    
                     // Get answeroptions/draggables.
                     answeroptions = questionEl.querySelector('.answeroptions');
 
                     if(questionEl.querySelector('.readonly') != null){
                         question.readonly = true;
                     }
+                    
+                    if(questionEl.querySelector('.feedback') !=null){
+                        question.feedback= questionEl.querySelector('.feedback');
+                        question.feedbackHTML=true;
+                    }
+
               
                     /* set all droppables to disabled but remove the faded look shown on ios
                      * This prevents the keyboard popping up when a droppable is dropped onto
