@@ -1,11 +1,6 @@
 <section class="list mma-qtype-gapfill-container" ng-if="question.text || question.text === ''">
     <div class="item item-text-wrap">
-           <mm-format-text ng-if="question.optionsaftertext" ng-onhold="clearGap($event)" ng-dblclick="clearGap($event)" ng-click="selectAnswer($event)"7 class="mm-content-with-float qtext" component="{{component}}" component-id="{{componentId}}">{{ question.text }}</mm-format-text>
-           <p ng-if="!question.readonly && question.isdragdrop" class="mm-info-card-icon gapfill-item-howto"><i class="icon ion-information"></i> {{ 'mm.question.howtodraganddrop' | translate }}</p>
-           <p>  <mm-format-text ng-if="question.isdragdrop" ng-onhold="clearGap($event)" ng-click="selectAnswer($event)" watch="true">{{question.answeroptions}} </mm-format-text></p>	
-           <mm-format-text ng-if="!question.optionsaftertext" ng-onhold="clearGap($event)" ng-dblclick="clearGap($event)" ng-click="selectAnswer($event)"7 class="mm-content-with-float qtext" component="{{component}}" component-id="{{componentId}}">{{ question.text }}</mm-format-text>
-  <mm-format-text watch="true" ng-if="question.feedbackHTML" component="{{component}}" component-id="{{componentId}}">
-            {{ question.feedback }}
-        </mm-format-text>
+          <p ng-if="!question.readonly && question.isdragdrop" class="item-howto item item-icon-left"><i class="icon ion-information"></i> {{ 'mm.question.howtodraganddrop' | translate }}</p>
+          <p><mm-format-text  ng-onhold="clearGap($event)" ng-dblclick="clearGap($event)" ng-click="selectAnswer($event)" watch="true" class="mm-content-with-float qtext" component="{{component}}" component-id="{{componentId}}">{{ question.text }}</mm-format-text></p>
     </div>
 </section>
