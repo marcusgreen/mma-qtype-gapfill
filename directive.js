@@ -27,9 +27,9 @@ angular.module('mm.addons.qtype_gapfill')
                 priority: 100,
                 templateUrl: 'addons/qtype/gapfill/template.html',
                 link: function (scope) {
-                    var question = scope.question,
-                            questionEl,
-                            content;
+                    var   questionEl,
+                          content,
+                          question = scope.question;
 
                     if (!question) {
                         $log.warn('Aborting because of no question received.');
@@ -37,25 +37,22 @@ angular.module('mm.addons.qtype_gapfill')
                     }
 
                     questionEl = angular.element(question.html);
+                    questionEl = questionEl[0] || questionEl;
 
                     // Get question content.
-                    content = questionEl[0].querySelector('.content');
+                    content = questionEl.querySelector('.content');
                     if (!content) {
                         $log.warn('Aborting because of an error parsing question.', question.name);
                         return $mmQuestionHelper.showDirectiveError(scope);
                     }
 
-                    // Remove sequencecheck and validation error.
+                    // Remove sequencecheck and validation error. Not sure why/if this is necessary
                     $mmUtil.removeElement(content, 'input[name*=sequencecheck]');
                     $mmUtil.removeElement(content, '.validationerror');
 
-                    // Replace Moodle's correct/incorrect classes with our own.
-                    $mmQuestionHelper.replaceCorrectnessClasses(questionEl);
-                    // Treat the correct/incorrect icons.
+                    // Replace Moodle's classes with the mobile ones.
                     $mmQuestionHelper.treatCorrectnessIcons(scope, questionEl);
                     $mmQuestionHelper.replaceFeedbackClasses(questionEl);
-
-
 
                     /* set all droppables to disabled but remove the faded look shown on ios */
                     draggables = content.querySelectorAll('.draggable');
@@ -69,10 +66,9 @@ angular.module('mm.addons.qtype_gapfill')
 
                     // Set the question text.
                     question.text = content.innerHTML;
-                    gapfillreadonly = document.querySelectorAll('.readonly');
-                     if (gapfillreadonly.length > 0) {
-                                question.readonly=true;
-                     }
+                    if(questionEl.querySelector('.readonly') != null){
+                        question.readonly = true;
+                    }
 
                     function getEl(event) {
                         selector = "#" + event.target.id;
@@ -82,7 +78,13 @@ angular.module('mm.addons.qtype_gapfill')
                         return element;
                     }
                     function deselect(selection) {
-                        /*set border to solid on all draggable words */ 
+                         /*set border to solid on all draggable words 
+                         * because document is used here instead of 
+                         * someting more specific, every draggable/optionanswer
+                         * will be deselected. But that is OK, because if 
+                         * there is a deselection everything should be deselected
+                         * e.g. on a multi question page
+                         */
                         draggables = document.querySelectorAll('.draggable');
                         for (i = 0; i < draggables.length; i++) {
                             if (draggables[i] === selection)
@@ -139,7 +141,6 @@ angular.module('mm.addons.qtype_gapfill')
                         }
 
                         if (selection.hasClass('droptarget')) {
-                           // gapfillreadonly = document.querySelectorAll('.readonly');
                             if (question.readonly==true) {
                                 return;
                             }
@@ -155,15 +156,9 @@ angular.module('mm.addons.qtype_gapfill')
                         /*set isdragdrop to true if it is a dragdrop question. This will then be used
                          * in template.html to determine when to show the  blue "tap to select..." prompt
                          */
-                        var draggables = document.querySelector('.qtext').querySelector('.draggable');
-                        if (draggables != null) {
+                         if(questionEl.querySelectorAll('.draggable') != null){
                             question.isdragdrop = true;
                         }
-                        gapfillreadonly = document.querySelectorAll('.readonly');
-                        if (gapfillreadonly.length > 0) {
-                            question.readonly = true;
-                        }
-
                     });
                 }
             };
