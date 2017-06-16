@@ -156,7 +156,7 @@ angular.module('mm.addons.qtype_gapfill')
                         /*set isdragdrop to true if it is a dragdrop question. This will then be used
                          * in template.html to determine when to show the  blue "tap to select..." prompt
                          */
-                         if(questionEl.querySelectorAll('.draggable') != null){
+                         if(questionEl.querySelectorAll('.draggable').length >0){
                             question.isdragdrop = true;
                         }
                     });
