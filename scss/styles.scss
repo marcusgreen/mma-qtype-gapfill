@@ -20,7 +20,17 @@
     .droptarget{
         text-align:center;  
     }
+    .gapfeedbackincorrect{
+        background: #faa;
+        border-radius:0.25em;
+        background-color:#faa;
+    }
 
+    .gapfeedbackcorrect{
+        background: #afa;
+        border-radius:0.25em;
+        background-color:#afa;;
+    }
 
     span.draggable.answers.picked{
         border:1px solid;
@@ -36,7 +46,6 @@
 
 
     span.draggable.answers{
-        font-size: 120%;
         padding:3px;        
         vertical-align: middle;
         display: inline-block;
